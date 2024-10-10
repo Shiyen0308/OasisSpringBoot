@@ -1,0 +1,11 @@
+body {
+     margin-top: 20px;
+     background-color: #eee;
+     background-image: url('/image/home/background-zelda.jpg');
+    background-size: cover; /* 使圖片覆蓋整個背景 */
+     background-position: center; /* 使圖片居中 */
+     background-repeat: no-repeat; /* 禁止圖片重複 */
+     z-index: -2,147,483,648;
+     object-fit: contain;
+}
+

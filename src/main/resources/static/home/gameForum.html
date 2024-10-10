@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OaSis - 遊戲列表</title>
+    <link href="https://cdn.datatables.net/v/ju/dt-2.0.7/b-3.0.2/b-colvis-3.0.2/cr-2.0.2/fh-4.0.1/r-3.0.2/rr-1.5.0/sc-2.4.2/sl-2.0.1/datatables.min.css"
+		rel="stylesheet">
+    <style>
+        .card {
+            overflow: hidden;
+        }
+        
+        .card-img-top {
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+        }
+        
+        #cardImgContainer {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            background-color: LightGray;
+        }
+        
+        #btn-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
+    <link rel="stylesheet" href="/image/home/background.css">
+</head>
+
+<body>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <nav id = "navbar">
+      </nav>
+
+    <div class="container">
+        <div class="row row-cols-md-4" id="gameList">
+           
+        </div>
+    </div>
+
+    <script>
+ 		// 加載navbar.html
+   		 $(function(){
+       		$("#navbar").load("navbar.html");
+   		 });
+        
+    
+        $(document).ready(function() {
+            
+            $.ajax({
+                type: "GET",
+                url: "/api/games", 
+                success: function(gameList) {
+                	console.log(gameList);
+                    gameList.forEach(function(game) {
+                        $('#gameList').append(`
+                            <div class="col mb-3">
+                                <div class="card h-100">
+                                    <div id="cardImgContainer" class="col-md-4">
+                                        <img src="${game.gameImg}" class="card-img-top" alt="${game.gameName}">
+                                    </div>
+                                        <div>
+                                        <a href="/forum/${game.gameId}" class="btn btn-primary">文章列表</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    });
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("獲取遊戲資料錯誤");
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

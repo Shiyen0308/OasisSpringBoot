@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header</title>
+    <style>
+        .header {
+    display: flex;
+    justify-content: space-between; /* 讓左右內容有空間分隔 */
+    align-items: center;
+    width: 100vw;
+    height: 80px;
+    position: fixed;
+    top: 70px;
+    background-color: #E4D8D9;
+    padding: 10px 20px;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+    z-index: 900; 
+}
+
+.header div {
+    cursor: pointer;
+    width: 20%;
+    height: 45px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    margin-right: 10px;
+    flex-shrink: 0;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+    margin-top: auto;
+}
+
+.header div:hover {
+    background-color: #B39194;
+}
+
+
+
+.header button {
+    cursor: pointer;
+    width: 120px; 
+    height: 45px; 
+    padding: 10px; 
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+    transition: background-color 0.3s; 
+    font-size: 20px; 
+    font-weight: bold; 
+    text-align: center; 
+    background-color: #E4D8D9; 
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+    z-index: 2; 
+}
+.button-container {
+    position: relative; 
+    margin-left: auto;
+}
+.header button:hover {
+    background-color: #B39194; 
+}
+.header a {
+    text-decoration: none; 
+    color: inherit; 
+}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div id="gameList">討論區</div>
+        <div id="artList">文章列表</div>
+        <div class="button-container">
+        <a id="postButton" class="headerButton"  >發文</a>
+        <a id="replyButton" class="headerButton">回覆</a>
+        </div>
+    </header>
+
+    <script>
+ // 發文
+	function post(){
+	    postButton.addEventListener('click', function() {
+	    	const currentUrl = window.location.href;
+
+		    
+		    const gameId =currentUrl.match(/\/forum\/([^\/]+)/)[1];
+			console.log(gameId)
+		 
+		    const postButton = document.getElementById('postButton');
+
+	        const newUrl = `/post/${gameId}`;
+	        window.location.href = newUrl; 
+	    });
+	}
+	 // 回覆
+	function reply() {
+    const replyButton = document.getElementById('replyButton'); 
+    replyButton.addEventListener('click', function() {
+        const currentUrl = window.location.href;
+        const match = currentUrl.match(/\/forum\/(\d+)\/art\/(\d+)/);
+
+        // 提取標題內容
+        const titleElement = document.getElementById('artTitle');
+        const artTitle = titleElement.textContent;
+        const encodedTitle = encodeURIComponent(artTitle); 
+
+        if (match) {
+            const gameId = match[1]; 
+            const artId = match[2];
+            const newUrl = `/reply/${gameId}/${artId}/${encodedTitle}`; 
+            window.location.href = newUrl; 
+        } else {
+            console.log("未找到 gameId 或 artId");
+        }
+    });
+}
+    	
+        function togglePostButton(show) {
+            document.getElementById('postButton').style.display = show ? 'block' : 'none';
+        }
+
+        function toggleReplyButton(show) {
+            document.getElementById('replyButton').style.display = show ? 'block' : 'none';
+        }
+
+        
+        document.getElementById('gameList').onclick = function() {
+            window.location.href = '/home/gameForum.html';
+        };
+			
+        document.getElementById('artList').onclick = function() {
+        	
+        	const currentUrl = window.location.pathname;
+            const gameIdMatch = currentUrl.match(/\/[a-zA-Z]+\/(\d+)/); 
+
+            let gameId;
+			
+            if (gameIdMatch && gameIdMatch[1]) {
+                gameId = gameIdMatch[1]; 
+            } else {
+                console.error('無法取得 gameId');
+                return; 
+            } 
+            console.log(gameId)
+        	window.location.href = `/forum/${gameId}`;
+        	
+        };
+        const replyRegex = /^\/forum\/[^\/]+\/art\/[^\/]+$/;
+        const postRegex = /^\/forum\/[^\/]+$/
+        const currentPath = window.location.pathname;
+        if (replyRegex.test(currentPath) ) {
+            displayReply = true;   
+        } else{
+        	displayReply = false; 
+        }
+        if (postRegex.test(currentPath)) {
+            displayPost = true;   
+        } else{
+        	displayPost = false; 
+        }
+
+        togglePostButton(displayPost);
+        toggleReplyButton(displayReply);
+        post();
+        reply();
+    </script>
+</body>
+</html>

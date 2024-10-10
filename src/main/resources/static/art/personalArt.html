@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>所有文章</title>
+    <style>
+        body {
+            background: url("/image/art/background.jpg") no-repeat center center;
+            background-size: cover;
+        }
+        .artContainer {
+            width: 100%;
+            height: auto;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: #D7D8EF;
+        }
+        .table th {
+            background-color: #51A1B4;
+        }
+        .table tr:hover {
+            background-color: #ddd;
+        }
+        .title {
+            font-size: 30px;
+            font-weight: bolder;
+            font-family: Roboto;
+            color: #660000;
+        }
+      a {
+  			text-decoration: none; 
+  			color: inherit; 
+		}
+        
+    </style>
+</head>
+<body>
+
+    <div class="artContainer">
+        <h1 class="title">發表文章</h1>
+        <table id="artTable" class="table">
+            <thead>
+                <tr>
+                    <th>文章標題</th>
+                    <th>發文時間</th>
+                    <th>修改</th>
+                    <th>刪除</th>
+                </tr>
+            </thead>
+            <tbody id="artTableBody">
+               
+            </tbody>
+        </table>
+    </div>
+
+   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+    //獲取個人文章
+        $(document).ready(function() {
+
+            $.ajax({
+                url: '/api/getArtList',
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    const artTableBody = $('#artTableBody');
+                    artTableBody.empty(); 
+
+                    data.forEach(artVO => {
+                    	console.log(artVO)
+                        const artRow = `
+                            <tr>
+                                <td><a href="/forum/${artVO.gameId}/art/${artVO.artId}" class="artTitle">${artVO.artTitle}</a></td>
+                                <td>${artVO.artTimestamp}</td>
+                                <td>
+                                <button class="update-button" data-artId=${artVO.artId}>修改</button>
+                                </td>
+                                <td>
+                                <button data-artId=${artVO.artId}>刪除</button>
+                                </td>
+                            </tr>
+                        `;
+                        artTableBody.append(artRow);
+                    });
+                    $(document).on('click', '.update-button', function() {
+                        
+                    	var artId = $(this).data('artid'); 
+                        updateArt(artId);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error("獲取文章資料失敗", status, error);
+                }
+            });
+        });
+    // 修改文章
+        function updateArt(artId) {
+        	$.ajax({
+                url: `/api/art/${artId}`, 
+                type: 'GET',
+                contentType: "application/json",
+	            dataType: "json",
+                success: function(data) {
+                    
+                    if (data) {
+                       
+                        sessionStorage.setItem('artData', JSON.stringify(data));
+                        
+                      
+                        window.location.href = '/update?artId=' + artId;
+                    } else {
+                        alert('獲取文章資料失敗');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    alert('獲取文章資料時發生錯誤');
+                }
+            });
+        }
+       
+	//刪除文章
+        function deleteArt(artId) {
+            $.ajax({
+                url: '/api/delete',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ artId: artId }),
+                success: function(data) {
+                    // 處理回傳的結果
+                    if (data.success) {
+                        alert('文章刪除成功');
+                        // 例如重定向或更新前端顯示
+                    } else {
+                        alert('文章刪除失敗');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+    </script>
+
+</body>
+</html>
