@@ -37,7 +37,7 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item mx-3">
-                                <a class="nav-link active" aria-current="page" href="#">首頁</a>
+                                <a class="nav-link active" aria-current="page" href="/home/home.html">首頁</a>
                             </li>
                             <li class="nav-item mx-3">
                                 <a class="nav-link" href="/home/gameForum.html">論壇入口</a>
@@ -48,9 +48,7 @@
                             <li class="nav-item mx-3">
                                 <a class="nav-link" href="#">瀏覽商品</a>
                             </li>
-                            <li class="nav-item mx-3">
-                                <a class="nav-link" href="#">訂閱訊息</a>
-                            </li>
+                            
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li class="btn btn-primary" id="login-btn">登入</li>
@@ -65,7 +63,6 @@
                                         <li><a class="dropdown-item" href="#">系統訊息</a></li>
                                         <li><a class="dropdown-item" href="/art/personalArt.html">我的文章</a></li>
                                         <li><a class="dropdown-item" href="#">我的購物車</a></li>
-                                        <li><a class="dropdown-item" href="#">我的訂閱</a></li>
                                         <li><a class="dropdown-item" id = "logOut" >登出</a></li>
                                         <li>
                                             <hr class="dropdown-divider">
@@ -86,7 +83,7 @@
     // 登入
     $(document).ready(function () {
         $("#login-btn").on("click", function () {
-            window.location.href = "/login"; 
+            window.location.href = "/user/login.html"; 
         });
 		$.ajax({
 			url: '/api/user',

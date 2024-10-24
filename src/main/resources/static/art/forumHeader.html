@@ -85,54 +85,76 @@
  // 發文
 	function post(){
 	    postButton.addEventListener('click', function() {
-	    	const currentUrl = window.location.href;
+	    	$.ajax({
+				url: '/api/user',
+				type: 'GET',
+				success: function (data) {
+					if (data.loggedIn) {
+						const currentUrl = window.location.href;
+						
+					    const gameId =currentUrl.match(/\/forum\/([^\/]+)/)[1];
+					
+					    const postButton = document.getElementById('postButton');
 
-		    
-		    const gameId =currentUrl.match(/\/forum\/([^\/]+)/)[1];
-			console.log(gameId)
-		 
-		    const postButton = document.getElementById('postButton');
-
-	        const newUrl = `/post/${gameId}`;
-	        window.location.href = newUrl; 
+				        const newUrl = `/post/${gameId}`;
+				        window.location.href = newUrl; 
+					}else {
+	                   alert("請先登錄") ;
+	                   window.location.href = "/login"; 
+	                    }
+				},
+				error: function (xhr, status, error) {
+	                console.error("取得使用者資料失敗:", error);
+	                $("#login-dropdown").hide();
+				 }
+			})
+	    	
+	    	
 	    });
 	}
 	 // 回覆
 	function reply() {
     const replyButton = document.getElementById('replyButton'); 
     replyButton.addEventListener('click', function() {
-        const currentUrl = window.location.href;
-        const match = currentUrl.match(/\/forum\/(\d+)\/art\/(\d+)/);
+    	$.ajax({
+			url: '/api/user',
+			type: 'GET',
+			success: function (data) {
+				if (data.loggedIn) {
+					const currentUrl = window.location.href;
+			        const match = currentUrl.match(/\/forum\/(\d+)\/art\/(\d+)/);
 
-        // 提取標題內容
-        const titleElement = document.getElementById('artTitle');
-        const artTitle = titleElement.textContent;
-        const encodedTitle = encodeURIComponent(artTitle); 
+			        // 提取標題內容
+			        const titleElement = document.getElementById('artTitle');
+			        const artTitle = titleElement.textContent;
+			        const encodedTitle = encodeURIComponent(artTitle); 
 
-        if (match) {
-            const gameId = match[1]; 
-            const artId = match[2];
-            const newUrl = `/reply/${gameId}/${artId}/${encodedTitle}`; 
-            window.location.href = newUrl; 
-        } else {
-            console.log("未找到 gameId 或 artId");
-        }
+			        if (match) {
+			            const gameId = match[1]; 
+			            const artId = match[2];
+			            const newUrl = `/reply/${gameId}/${artId}/${encodedTitle}`; 
+			            window.location.href = newUrl; 
+			        } else {
+			            console.log("未找到 gameId 或 artId");
+			        }
+				}else {
+                   alert("請先登錄") ;
+                   window.location.href = "/login"; 
+                    }
+			},
+			error: function (xhr, status, error) {
+                console.error("取得使用者資料失敗:", error);
+                $("#login-dropdown").hide();
+			 }
+		})
+    	
     });
 }
-    	
-        function togglePostButton(show) {
-            document.getElementById('postButton').style.display = show ? 'block' : 'none';
-        }
-
-        function toggleReplyButton(show) {
-            document.getElementById('replyButton').style.display = show ? 'block' : 'none';
-        }
-
-        
+    	// 跳轉討論區
         document.getElementById('gameList').onclick = function() {
             window.location.href = '/home/gameForum.html';
         };
-			
+		// 跳轉文章區
         document.getElementById('artList').onclick = function() {
         	
         	const currentUrl = window.location.pathname;
@@ -143,13 +165,21 @@
             if (gameIdMatch && gameIdMatch[1]) {
                 gameId = gameIdMatch[1]; 
             } else {
-                console.error('無法取得 gameId');
-                return; 
+            	window.location.href = '/home/gameForum.html'; 
+            	return;
             } 
             console.log(gameId)
         	window.location.href = `/forum/${gameId}`;
         	
         };
+        // 發文 & 回覆按鈕 顯示
+        function togglePostButton(show) {
+            document.getElementById('postButton').style.display = show ? 'block' : 'none';
+        }
+
+        function toggleReplyButton(show) {
+            document.getElementById('replyButton').style.display = show ? 'block' : 'none';
+        }
         const replyRegex = /^\/forum\/[^\/]+\/art\/[^\/]+$/;
         const postRegex = /^\/forum\/[^\/]+$/
         const currentPath = window.location.pathname;
@@ -163,7 +193,7 @@
         } else{
         	displayPost = false; 
         }
-
+		
         togglePostButton(displayPost);
         toggleReplyButton(displayReply);
         post();

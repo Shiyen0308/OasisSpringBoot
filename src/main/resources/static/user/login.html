@@ -23,7 +23,7 @@
             z-index: 1000;
         }
         #login-form-container {
-            margin-top: 60px; 
+            margin-top: 200px; 
         }
     </style>
     <link rel="stylesheet" href="/image/home/background.css">
@@ -35,13 +35,12 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-    <nav id = "navbor">
-            <iframe src="/home/navbar.html" style="border: none; width: 100%; height: auto;"></iframe>
-    </nav>
+    <nav id = "navbar">
+      </nav>
 
     <div id="login-form-container" class="container w-100 h-50 d-flex justify-content-center">
         <form class="border border-primary border-2 rounded p-4 card" id="login-form">
-            <div id="errorMsg" class="bg-danger-subtle border border-danger-subtle rounded-3 text-danger-emphasis p-3 mb-2" style="display: none;"></div>
+            <div id="error-Msg" class="bg-danger-subtle border border-danger-subtle rounded-3 text-danger-emphasis p-3 mb-2" style="display: none;"></div>
 
             <div class="mb-3">
                 <label for="email" class="form-label fs-5 fw-bold">信箱</label>
@@ -56,13 +55,21 @@
                 <a href="/" class="btn btn-secondary">回到首頁</a>
             </div>
             <div class="text-end mt-3 ml-auto">
-                <a href="/register">註冊</a>
+                <a href="/user/register.html">註冊</a>
             </div>
         </form>
     </div>
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<script src="/js/navbar.js"></script>
     <script>
-        document.getElementById('login-form').addEventListener('submit', function (event) {
+	    function showErrorMsg(msg) {
+		    const errorElement = document.getElementById('error-Msg');
+		    errorElement.textContent = ''; // 清除舊訊息
+		    errorElement.textContent = msg; // 設定新錯誤訊息
+		    errorElement.style.display = 'block' ; 
+		}
+    
+    	document.getElementById('login-form').addEventListener('submit', function (event) {
             event.preventDefault(); 
 
             const email = document.getElementById('email').value;
@@ -70,7 +77,7 @@
 
             
             if (email === '' || password === '') {
-                showErrorMsg('請填寫所有欄位');
+            	showErrorMsg('請填寫所有欄位');
                 return;
             }
             
@@ -93,7 +100,8 @@
                 }
             });
         });
-        
+    	
+    
             
 
         

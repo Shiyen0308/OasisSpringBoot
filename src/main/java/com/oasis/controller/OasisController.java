@@ -12,10 +12,10 @@ public class OasisController {
 		return "redirect:/home/home.html";
 	}
 	// 登入
-	@GetMapping("/login")
-	public String login() {
-		return "redirect:/login/login.html";
-	}
+		@GetMapping("/login")
+		public String login() {
+			return "redirect:/user/login.html";
+		}
 	// 討論區
 	@GetMapping("/forum/{gameId}")
 	public String fowardToForumArtPage() {

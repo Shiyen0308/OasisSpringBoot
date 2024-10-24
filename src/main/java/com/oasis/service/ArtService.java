@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,32 +40,33 @@ public class ArtService {
 
 	// 更新文章
 	@Transactional
-	public ArtVO updateArt(Integer artId, String artCotent,Timestamp artTimestamp) {
+	public Boolean updateArt(Integer artId, String artCotent,Timestamp artTimestamp) {
 		try {
 			 ArtVO art = artRepository.findById(artId)
 			            .orElseThrow(() -> new RuntimeException("文章不存在"));
 			 art.setArtContent(artCotent);
 			 art.setArtTimestamp(artTimestamp);
-			return artRepository.save(art);
+			 artRepository.save(art);
+			 return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return false;
 		}
 	}
 
 	// 刪除文章
 	@Transactional
-	public void deleteArt(Integer artId) {
+	public Boolean deleteArt(Integer artId,Timestamp artTimestamp) {
 		try {
-			Optional<ArtVO> optionalArt = artRepository.findById(artId);
-			if (optionalArt.isPresent()) {
-				ArtVO artVO = optionalArt.get();
-				artVO.setArtStatus(1);
-			} else {
-				System.out.println("Article not found for ID: " + artId);
-			}
+		 ArtVO art = artRepository.findById(artId)
+		            .orElseThrow(() -> new RuntimeException("文章不存在"));
+		 art.setArtTimestamp(artTimestamp);
+		 art.setArtStatus(1);
+		 artRepository.save(art);
+		 return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+		e.printStackTrace();
+		return false;
 		}
 	}
 
@@ -97,7 +100,7 @@ public class ArtService {
 		}
 	}
 
-	// 查詢單篇文章&留言
+	// 查詢首篇文章&留言
 	public ArtDTO getFirstArtWithMessage(Integer artId) {
 		try {
 			Optional<ArtVO> optionalArt = artRepository.findById(artId);
@@ -112,7 +115,6 @@ public class ArtService {
 		    }else {
 		    	artDTO.setArtContent("此文章已被刪除");
 		    }
-		    artDTO.setArtContent(art.getArtContent());
 		    artDTO.setArtTimestamp(art.getArtTimestamp());
 		    artDTO.setUserNickname(art.getUserVO().getUserNickname());
 		    artDTO.setUserAvatar(art.getUserVO().getUserAvatar());
@@ -164,10 +166,12 @@ public class ArtService {
 	        return null;  
 	    }
 	}
-
 	
-		
-		
+//	// 搜尋文章
+//	 public Page<ArtVO> searchPosts(String keyword, Pageable pageable) {
+//	        return artRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
+//	    }
+//	
 		
 	}
 

@@ -1,0 +1,58 @@
+html {
+            height: 100%;
+        }
+        .artTitle {
+            color: black;
+            text-decoration: none;
+        }
+        #artTable_wrapper {
+            border: 1px solid #ccc; 
+            overflow: auto; 
+        }
+        .dataTables_wrapper {
+            width: 80%; 
+            margin: auto; 
+        }
+        .artContainer {
+            width: 100%;   
+            height: auto; 
+            margin: 0 auto; 
+            overflow: auto; 
+            border: 1px solid #ccc;
+            padding: 20px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #D7D8EF;
+        }
+        .table thead th {
+            background-color: #51A1B4; 
+        }
+        .dt-layout-row {
+            background-color: #4B92AF; 
+        }
+        .table tr:nth-child(even) {
+            background-color: #f2f2f2; 
+        }
+        .table tr:hover {
+            background-color: #ddd;
+        }
+        label {
+            font-size: 20px;
+        }
+        label[for="dt-length-0"] {
+            display: none;
+        }
+        select {
+            display: none;
+        }
+        
+        #search-container {
+            margin: 10px 0px;
+            text-align: left;
+        }
+        #search-input {
+            width: 90%;
+            padding: 10px;
+        }
+        #search-button {
+            padding: 10px;
+        }

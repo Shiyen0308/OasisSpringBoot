@@ -1,14 +1,24 @@
 package com.oasis.model;
 
+import java.sql.Timestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="game")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class GameVO implements java.io.Serializable{
 	@Id
 	@Column(name = "game_id")
@@ -18,24 +28,7 @@ public class GameVO implements java.io.Serializable{
 	private String gameName;
 	@Column(name = "game_img")
 	private String gameImg;
-	public Integer getGameId() {
-		return gameId;
-	}
-	public void setGameId(Integer gameId) {
-		this.gameId = gameId;
-	}
-	public String getGameName() {
-		return gameName;
-	}
-	public void setGameName(String gameName) {
-		this.gameName = gameName;
-	}
-	public String getGameImg() {
-		return gameImg;
-	}
-	public void setGameImg(String gameImg) {
-		this.gameImg = gameImg;
-	}
+	
 	
 	
 }

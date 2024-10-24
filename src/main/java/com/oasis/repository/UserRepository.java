@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.oasis.model.UserVO;
 
 public interface UserRepository extends JpaRepository<UserVO, Integer> {
-	public UserVO findByUserEmail(String useremail);
+	public UserVO findByUserEmail(String userEmail);
+	boolean existsByUserEmail(String userEmail);
 }

@@ -1,0 +1,28 @@
+body {
+            background: url("/image/art/background.jpg") no-repeat center center;
+            background-size: cover;
+        }
+        .artContainer {
+            width: 100%;
+            height: auto;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: #D7D8EF;
+        }
+        .table th {
+            background-color: #51A1B4;
+        }
+        .table tr:hover {
+            background-color: #ddd;
+        }
+        .title {
+            font-size: 30px;
+            font-weight: bolder;
+            font-family: Roboto;
+            color: #660000;
+        }
+      table	a{
+  			text-decoration: none; 
+  			color: inherit; 
+		}

@@ -48,10 +48,10 @@
     </div>
 
     <script>
- 		// 加載navbar.html
-   		 $(function(){
-       		$("#navbar").load("navbar.html");
-   		 });
+ // 加載navbar.html
+		 $(function(){
+  		$("#navbar").load("navbar.html");
+		 });
         
     
         $(document).ready(function() {
@@ -63,17 +63,17 @@
                 	console.log(gameList);
                     gameList.forEach(function(game) {
                         $('#gameList').append(`
-                            <div class="col mb-3">
-                                <div class="card h-100">
-                                    <div id="cardImgContainer" class="col-md-4">
-                                        <img src="${game.gameImg}" class="card-img-top" alt="${game.gameName}">
-                                    </div>
-                                        <div>
-                                        <a href="/forum/${game.gameId}" class="btn btn-primary">文章列表</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                       <div class="col mb-3">
+                           <div class="card h-100">
+                               <div id="cardImgContainer" class="col-md-4">
+                                   <img src="${game.gameImg}" class="card-img-top" alt="${game.gameName}">
+                               </div>
+                                   <div>
+                                   <a href="/forum/${game.gameId}" class="btn btn-primary">文章列表</a>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
                         `);
                     });
                 },

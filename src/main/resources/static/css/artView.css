@@ -1,0 +1,191 @@
+  * {
+	box-sizing: border-box;
+	}
+
+body {
+	top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+	background:url("/image/art/background.jpg")
+		no-repeat center center;
+	background-size: cover;
+	z-index:3000;
+
+	
+}
+#comment {
+    display: block; /* 確保這個元素是可見的 */
+}
+  p{
+ 	position:relative;
+ 	
+ }
+.artContainer {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	position: relative;
+	top: 20px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.user {
+	display: flex;
+	flex-direction: column;
+	position: sticky;
+	height: 200px;
+	width: 200px;
+	top: 150px;
+	flex-shrink: 0;
+	background-color: white;
+	padding:10px;
+	margin: 10px;
+	box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+}
+.userAvatar{
+	flex:8;
+    border-radius: 50%;  
+   	display:flex;
+     overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    
+}
+.userAvatar img {
+	 display: block;
+ 	 width: 100%;
+ 	 height: auto;
+ 	 max-width:150px;
+ 	 max-height:130px;
+ 	 
+        }
+
+.userNickname {
+    flex:2;
+	width: fit-content;
+	display: flex;
+    align-items: center; 
+    justify-content: center; 
+    text-align: center;
+   
+}
+
+.art {
+	background-color: white;
+	flex-grow: 1;
+	flex-direction: column;
+	gap: 10px;
+	position: relative;
+	margin: 10px;
+	box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+}
+
+.artTitle {
+	margin-top:10px;
+	margin-left:10px;
+}
+
+.artContent {
+	min-height: 300px;
+	height: auto;
+	max-height: 100%;
+	overflow-wrap: break-word;
+	margin: 10px;
+}
+.commentContainer {
+	background-color: #F4DAD0;
+	margin: 1px;
+	z-index:0;
+}
+.oneMessage {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  
+}
+.oneMessage:hover{
+	background-color: #D8D3D3;
+	opacity:0.8;
+	z-index:1;
+}
+.imageContainer{
+	position: absolute;
+  	top: 0;
+    right: 0;
+	 }
+.message{
+	 display: flex;
+	 flex-direction: column;
+  	
+
+}
+.messageTop {
+	display: flex;
+  flex-direction: row;
+	
+}
+
+.messageUser {
+	width: fit-content;
+	display: inline-block;
+	font-weight: bold;
+	flex-shrink: 0;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+#artContent{
+	position:relative;
+}
+.messageContent {
+	display: inline-block;
+	flex-grow: 1;
+	margin-top: 5px;
+}
+
+.messageTimestamp {
+	font-size: 0.9em;
+	color: #777;
+	text-align: left;
+	margin-left: 10px;
+	margin-top: 5px;
+	
+}
+#messageForm{
+	display: flex;
+	justify-content: space-between;
+	
+}
+input[type="text"] {
+	width: 100%;
+}
+
+
+.image img{
+width:100%
+}
+#markContainer {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    cursor: pointer;
+    padding: 10px;
+    width:50px;
+    height:50px;
+}
+#markContainer img{
+	display: block;
+ 	 width: 100%;
+ 	 height: auto;
+ 	 max-width:50px;
+ 	 max-height:50px;
+}
+.unMarked {
+	
+    background-color: transparent;
+}
+.marked {
+    background-color: #ffcc00;
+}

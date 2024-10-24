@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Classy Register Form Responsive Widget Template :: W3layouts</title>
+<!-- Meta tag Keywords -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Classy Register Form Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- Meta tag Keywords -->
+<!-- css files -->
+<link href="/css/register.css" rel="stylesheet" type="text/css" media="all">
+<!-- //css files -->
+<!-- online-fonts -->
+<link href="//fonts.googleapis.com/css?family=Cuprum:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext,vietnamese" rel="stylesheet">
+<!--//online-fonts -->
+</head>
+<body>
+<nav id = "navbar">
+</nav>
+
+<div class="w3-main">
+	<!-- Main -->
+	<div class="about-bottom main-agile book-form">
+		<h2 class="tittle">註冊表單</h2>
+		<form id="registerForm" method="post" enctype="multipart/form-data">
+			<div class="form-date-w3-agileits">
+				<label> 暱稱 :</label>
+				<input type="text" id = "nickName" name="nickName" placeholder="你的暱稱" required>
+				<label> 信箱 : </label>
+				<input type="email" id="email" name="email" placeholder="電子郵件" required>
+				<label> 密碼 : </label>
+				<input type="password" id = "password" name="password" placeholder="密碼數須設定8~12" required>
+				<label> 確認密碼 </label>
+				<input type="password" id="rePassword" name="repassword" placeholder="密碼數須設定8~12" required>
+				<label>頭像</label>
+				<input type="file" id = "avatar" name="avatar" >
+				 <img id="avatarPreview" src="" alt="預覽頭像" style="display:none; width: 150px; height: 150px; object-fit: cover;"/>
+				<div style = "margin-top: 10px">
+				<label> 驗證碼 </label>
+				<input type="password" id = "checkPassword" name="checkPassword" placeholder="驗證碼" required>
+				<button id ="sendCheckPassword"  >發送驗證碼</button>
+				</div>
+			</div>
+			<div class="make wow shake">
+				  <input type="submit" value="註冊">
+			</div>
+		</form>
+	</div>
+
+</div>
+<!-- footer -->
+<div class="footer-w3l">
+	<p>&copy; 2017 Classy Register Form. All rights reserved | Design by <a href="http://w3layouts.com">W3layouts</a></p>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="/js/navbar.js"></script>
+<script>
+		let isCooldown = false; 
+		let countdown; 
+
+	
+	//圖像選擇後的預覽
+	document.getElementById('avatar').addEventListener('change', function (event) {
+	    var file = event.target.files[0];
+	
+	    if (file && file.type.startsWith('image/')) {
+	        var reader = new FileReader();
+	
+	        reader.onload = function (e) {
+	            var avatarPreview = document.getElementById('avatarPreview');
+	            avatarPreview.src = e.target.result;
+	            avatarPreview.style.display = 'block';
+	        }
+	
+	        reader.readAsDataURL(file);
+	    }
+	});
+	 // 表單提交
+    document.getElementById('registerForm').addEventListener('submit', function (event) {
+        event.preventDefault(); 
+
+        var formData = new FormData(); 
+        var nickName = document.getElementById('nickName').value.trim();
+        var email = document.getElementById('email').value.trim();
+        var password = document.getElementById('password').value.trim();
+        var rePassword = document.getElementById('rePassword').value.trim();
+        var avatar = document.getElementById('avatar').files[0];
+        var checkPassword = document.getElementById('checkPassword').value.trim();
+
+        // 驗證表單資料是否符合要求
+        if(password.length < 8 || password.length > 12){
+        	alert("密碼數須設定在 8~12 個字元之間");
+        	return;
+        }
+        if (password !== rePassword) {
+            alert("密碼與確認密碼不一致！");
+            return;
+        }
+        formData.append('nickName', nickName);
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('avatar', avatar);
+        formData.append('checkPassword', checkPassword);
+
+        
+        $.ajax({
+            url: '/api/register',
+            type: 'POST',
+            data: formData,
+            contentType: false, 
+            processData: false, 
+            success: function(data) {
+                if (data) {
+                    alert(data);
+                    window.location.href = '/home';
+                } else {
+                    alert(data);
+                }
+            },
+            error: function(jqXHR) {
+                if (jqXHR.status === 400) {
+                    alert("驗證失敗：" + jqXHR.responseText);
+                } else {
+                    alert("發生錯誤，請稍後再試");
+                }
+            }
+        });
+    });
+
+    // 發送驗證碼
+    function sendCheckPassword() {
+        var email = document.getElementById('email').value;
+		if(!email){
+			alert("請填寫信箱")
+			return 
+		}
+        fetch('/api/sendCheckPassword', {  
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('驗證碼已發送到你的電子郵件');
+                startCooldown();
+            } else {
+                alert('發送驗證碼失敗');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('發送驗證碼時發生錯誤');
+        });
+    }
+    document.getElementById('sendCheckPassword').addEventListener("click",function(){
+    	sendCheckPassword();
+    });
+    // 驗證碼冷卻重設
+     function startCooldown() {
+            isCooldown = true; 
+            const sendCheckPassword = document.getElementById('sendCheckPassword');
+            sendCheckPassword.disabled = true; 
+            let remainingTime = 300; 
+            updateButtonText(sendCheckPassword, remainingTime); 
+
+            countdown = setInterval(() => {
+                remainingTime--;
+                updateButtonText(sendCheckPassword, remainingTime);
+                
+                if (remainingTime <= 0) {
+                    clearInterval(countdown); 
+                    isCooldown = false; 
+                    sendCheckPassword.disabled = false; 
+                    sendCheckPassword.innerText = '發送驗證碼'; 
+                }
+            }, 1000); 
+        }
+    // 更新倒計時時間
+    function updateButtonText(button, remainingTime) {
+            const minute = Math.floor(remainingTime / 60);
+            const second = remainingTime % 60;
+            button.innerText = `請稍候 ${minute} 分 ${second < 10 ? '0' : ''}${second} 秒`; 
+        }
+   
+</script>
+</body>
+</html>

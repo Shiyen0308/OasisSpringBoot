@@ -21,7 +21,7 @@ public class MessageService {
 	
 	// 新增留言
 		@Transactional
-		public Integer CreateArt(MessageVO messageVO) {
+		public Integer CreateMessage(MessageVO messageVO) {
 			try {
 				MessageVO savedMessage = messageRepository.save(messageVO);
 				return savedMessage.getMessageId();

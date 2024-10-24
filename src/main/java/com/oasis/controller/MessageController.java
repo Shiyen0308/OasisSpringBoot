@@ -26,33 +26,23 @@ public class MessageController {
 	private MessageService messageService;
 
 	@PostMapping("/message")
-	public ResponseEntity<?> addMessage(@RequestBody Map<String, Object> messageData, HttpSession session) {
+	public ResponseEntity<?> addMessage(@RequestBody Map<String, String> messageData, HttpSession session) {
 		try {
-			
-			UserVO user = (UserVO)session.getAttribute("user"); 
+
+			UserVO user = (UserVO) session.getAttribute("user");
 
 			if (user == null) {
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("使用者未登入");
 			}
-				
-			
 
-			MessageVO message = new MessageVO();
-			String messageContent = (String) messageData.get("messageContent");
-			String artIdStr = (String) messageData.get("artId");
-		    Integer artId = Integer.parseInt(artIdStr); 
-		    
-		    
-	        message.setMessageContent(messageContent);
-	        message.setMessageArtId(artId);	        
-	        message.setUserVO(user);
-	        message.setMessageTimestamp(Timestamp.valueOf(LocalDateTime.now()));
-	       
-	        
-			Integer messageId = messageService.CreateArt(message);
-			
+			String messageContent = messageData.get("messageContent");
+			Integer artId = Integer.valueOf(messageData.get("artId"));
+
+			MessageVO message = MessageVO.builder().messageContent(messageContent).messageArtId(artId)
+								.userVO(user).messageTimestamp(Timestamp.valueOf(LocalDateTime.now())).build();
+			Integer messageId = messageService.CreateMessage(message);
+
 			MessageDTO messageDTO = messageService.getMessage(messageId);
-			
 
 			return ResponseEntity.status(HttpStatus.CREATED).body(messageDTO);
 

@@ -2,6 +2,8 @@ package com.oasis.model;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,9 +13,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "message")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MessageVO implements java.io.Serializable {
 	
 	@Id
@@ -21,7 +32,7 @@ public class MessageVO implements java.io.Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer messageId;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "message_user_id", referencedColumnName = "user_id")
 	private UserVO userVO ;
 
@@ -29,53 +40,14 @@ public class MessageVO implements java.io.Serializable {
 	private Integer messageArtId;
 	
 	@Column(name ="message_content",columnDefinition = "mediumtext")
+	@NotBlank
 	private String messageContent;
 	
 	@Column(name ="message_timestamp")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp messageTimestamp;
 
-	public Integer getMessageId() {
-		return messageId;
-	}
-
-	public void setMessageId(Integer messageId) {
-		this.messageId = messageId;
-	}
-
-	public UserVO getUserVO() {
-		return userVO;
-	}
-
-	public void setUserVO(UserVO userVO) {
-		this.userVO = userVO;
-	}
-
 	
-
-	public String getMessageContent() {
-		return messageContent;
-	}
-
-	public void setMessageContent(String messageContent) {
-		this.messageContent = messageContent;
-	}
-
-	public Timestamp getMessageTimestamp() {
-		return messageTimestamp;
-	}
-
-	public void setMessageTimestamp(Timestamp messageTimestamp) {
-		this.messageTimestamp = messageTimestamp;
-	}
-
-	public Integer getMessageArtId() {
-		return messageArtId;
-	}
-
-	public void setMessageArtId(Integer messageArtId) {
-		this.messageArtId = messageArtId;
-	}
-
 	
 	
 }

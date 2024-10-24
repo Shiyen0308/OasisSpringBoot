@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.oasis.model.ArtDTO;
@@ -51,8 +54,7 @@ public class ArtController {
 	// 獲取首篇文章
 	@GetMapping("/art/{artId}")
 	public ResponseEntity<?> getArtView(@PathVariable String artId) {
-		Integer intArtId = Integer.valueOf(artId);
-		ArtDTO artDTO = artService.getFirstArtWithMessage(intArtId);
+		ArtDTO artDTO = artService.getFirstArtWithMessage(Integer.valueOf(artId));
 		 if (artDTO == null) {
 		        return ResponseEntity.status(HttpStatus.NOT_FOUND)
 		                             .body("找不到該文章，請檢查文章 ID");
@@ -70,7 +72,7 @@ public class ArtController {
 
 	// 新增文章
 	@PostMapping("/postArt")
-	public ResponseEntity<?> postArt(@RequestBody Map<String, Object> artData, HttpSession session) {
+	public ResponseEntity<?> postArt(@RequestBody Map<String, String> artData, HttpSession session) {
 		try {
 
 			UserVO user = (UserVO) session.getAttribute("user");
@@ -78,21 +80,18 @@ public class ArtController {
 			if (user == null) {
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("使用者未登入");
 			}
-
-			ArtVO art = new ArtVO();
-			String artTitle = (String) artData.get("artTitle");
-			String artContent = (String) artData.get("artContent");
-			String gameIdStr = (String) artData.get("gameId");
-			Integer gameId = Integer.parseInt(gameIdStr);
-			
-			art.setArtTitle(artTitle);
-			art.setArtContent(artContent);
+			String artTitle = artData.get("artTitle");
+			String artContent =  artData.get("artContent");
+			Integer gameId = Integer.valueOf(artData.get("gameId"));
 			Optional<GameVO> optGame = gameRepository.findById(gameId);
-			art.setGameVO(optGame.orElse(null));
-			art.setUserVO(user);
-			art.setArtTimestamp(Timestamp.valueOf(LocalDateTime.now()));
-			art.setArtStatus(0);
-			art.setArtReply(null);
+			GameVO gameVO = (GameVO)optGame.orElse(null);
+			ArtVO art = ArtVO.builder().artTitle(artTitle).artContent(artContent)
+						.artReply(null).artStatus(0)
+						.artTimestamp(Timestamp.valueOf(LocalDateTime.now()))
+						.gameVO(gameVO).userVO(user).build();
+			
+			
+			
 			Integer artId = artService.CreateArt(art);
 
 			return ResponseEntity.status(HttpStatus.CREATED).body(artId);
@@ -104,7 +103,7 @@ public class ArtController {
 	}
 	// 回覆文章
 		@PostMapping("/replyArt")
-		public ResponseEntity<?> replyArt(@RequestBody Map<String, Object> artData, HttpSession session) {
+		public ResponseEntity<?> replyArt(@RequestBody Map<String, String> artData, HttpSession session) {
 			try {
 
 				UserVO user = (UserVO) session.getAttribute("user");
@@ -112,23 +111,18 @@ public class ArtController {
 				if (user == null) {
 					return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("使用者未登入");
 				}
-
-				ArtVO art = new ArtVO();
-				String artTitle = (String) artData.get("artTitle");
-				String artContent = (String) artData.get("artContent");
-				String gameIdStr = (String) artData.get("gameId");
-				Integer gameId = Integer.parseInt(gameIdStr);
-				String artIdStr = (String) artData.get("artId");
-				Integer artId = Integer.parseInt(artIdStr);
-				
-				art.setArtTitle(artTitle);
-				art.setArtContent(artContent);
+				String artTitle = artData.get("artTitle");
+				String artContent = artData.get("artContent");
+				Integer gameId = Integer.valueOf(artData.get("gameId"));
+				Integer artId = Integer.valueOf(artData.get("artId"));
 				Optional<GameVO> optGame = gameRepository.findById(gameId);
-				art.setGameVO(optGame.orElse(null));
-				art.setUserVO(user);
-				art.setArtTimestamp(Timestamp.valueOf(LocalDateTime.now()));
-				art.setArtStatus(0);
-				art.setArtReply(artId);
+				GameVO gameVO = (GameVO)optGame.orElse(null);
+				ArtVO art = ArtVO.builder().artTitle(artTitle).artContent(artContent)
+							.artStatus(0).gameVO(gameVO).artReply(artId)
+							.artTimestamp(Timestamp.valueOf(LocalDateTime.now()))
+							.userVO(user).build();
+				
+				
 				artService.CreateArt(art);
 
 				return ResponseEntity.status(HttpStatus.CREATED).body(artId);
@@ -155,14 +149,35 @@ public class ArtController {
 				return ResponseEntity.ok(artListDTO);
 			}
 		
-//		//修改文章
-//		@PutMapping("/update")
-//		public ResponseEntity<?> updateArt(@RequestBody Map<String, Object> artData){
-//			Integer artId = (Integer) artData.get("artId"); 
-//			String artContent = (String) artData.get("artContent");
-//			Timestamp artTimestamp = Timestamp.valueOf(LocalDateTime.now());
-//			 ArtVO artVO = artService.updateArt(artId, artContent, artTimestamp);
-//			 return ResponseEntity.ok(artVO);
-//			
-//		}
+		//修改文章
+		@PutMapping("/update")
+		public ResponseEntity<?> updateArt(@RequestBody Map<String, String> artData){
+			Integer artId = Integer.valueOf(artData.get("artId")); 
+			String artContent = artData.get("artContent");
+			Timestamp artTimestamp = Timestamp.valueOf(LocalDateTime.now());
+			 if (artService.updateArt(artId, artContent, artTimestamp)) {
+				 return ResponseEntity.ok().build();
+			 }else {
+				 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("文章不存在或更新失敗"); 
+			 }
+		}
+		//刪除文章
+		@PutMapping("/delete")
+		public ResponseEntity<?> deleteArt(@RequestBody Map<String, String> artData){
+			Integer artId = Integer.valueOf(artData.get("artId")); 
+			Timestamp artTimestamp = Timestamp.valueOf(LocalDateTime.now());
+			 if (artService.deleteArt(artId, artTimestamp)) {
+				 return ResponseEntity.ok(true);
+			 }else {
+				 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("文章不存在或更新失敗"); 
+			 }
+		}
+//		// 搜尋文章
+//		@GetMapping("/search")
+//		public ResponseEntity<Page<ArtVO>> searchPosts(@RequestParam String keyword,
+//                @RequestParam int page,
+//                @RequestParam int size) {
+//				Page<ArtVO> posts = artService.searchPosts(keyword, PageRequest.of(page - 1, size));
+//					return ResponseEntity.ok(posts); // 回傳 200 OK 和結果
+//			}
 }
